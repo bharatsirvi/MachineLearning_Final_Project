@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Heart Disease Prediction</title>
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css')}}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="{{ url_for('static',filename='img/logo.png')}}" type="image/x-icon">
+</head>
+
+
+<body id="home">
+    <nav >
+        <div class="left">
+            <img src="{{ url_for('static',filename='img/logo.png')}}" alt="" srcset="">
+            <h1>Heart Disease Predictor</h1>
+        </div>
+        <div class="right">
+            <ul class="navbar">
+                <li class="navitem"><a href="#home">Home</a></li>
+                <li class="navitem"><a href="#gid">Guide</a></li>
+                <li class="navitem"><a href="#">About</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <form method="post" action="/predict" class="form">
+            <div class="item">
+                <label>Age(in years)</label>
+                <input type="number" min="0" max="100" name="age" placeholder="Please Enter Your Age">
+            </div>
+            <div class="item">
+                <label>Sex</label>
+                <select name="sex">
+                    <option value="-1">--Please choose an option--</option>
+                    <option value="1">Male</option>
+                    <option value="0">Female</option>
+                </select>
+            </div>
+            <div class="item">
+                <label>Chest pain type</label>
+                <select name="cp">
+                    <option value="-1">--Please choose an option--</option>
+                    <option value="0">Typical angina</option>
+                    <option value="1">Atypical angina</option>
+                    <option value="2">Non-angina pain</option>
+                    <option value="3">Asymptomatic</option>
+                </select>
+            </div>
+            <div class="item">
+                <label> Resting blood pressure (in mm Hg)</label>
+                <input type="number" name="trestbps" min="0" max="300" placeholder="eg 222">
+            </div>
+            <div class="item">
+                <label>Serum cholesterol (in mg/dl) </label>
+                <input type="number" name="chol" min="0" max="1000" placeholder="eg 222">
+            </div>
+            <div class="item">
+                <label>Fasting blood sugar(Fbs)</label>
+                <select name="fbs">
+                    <option value="-1">--Please choose an option--</option>
+                    <option value="1">Fbs > 120mg/dl</option>
+                    <option value="0">Fbs <= 120mg/dl</option>
+                </select>
+            </div>
+            <div class="item">
+                <label>Resting electrocardiographic results</label>
+                <select name="restecg">
+                    <option value="-1">--Please choose an option--</option>
+                    <option value="0">Normal</option>
+                    <option value="1">Having ST-T wave abnormality</option>
+                    <option value="2">Probable or definite left ventricular hypertrophy</option>
+                </select>
+            </div>
+            <div class="item">
+                <label>Maximum heart rate achieved</label>
+                <input type="number" name="thalach" min="0" max="500" placeholder="eg 222">
+            </div>
+            <div class="item">
+                <label>Exercise induced angina</label>
+                <select name="exang">
+                    <option value="-1">--Please choose an option--</option>
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </select>
+            </div>
+            <div class="item">
+                <label>Oldpeak (ST depression induced by exercise relative to rest)</label>
+                <input type="number" name="oldpeak" min="0.00" max="10.00" step="0.01" placeholder="eg 2.22">
+            </div>
+            <div class="item">
+                <label>Slope (slope of the peak exercise ST segment)</label>
+                <select name="slope">
+                    <option value="-1">--Please choose an option--</option>
+                    <option value="0">Upsloping</option>
+                    <option value="1">Flatsloping</option>
+                    <option value="2">Downsloping</option>
+                </select>
+            </div>
+            <div class="item">
+                <label>Number of major vessels (0-3) colored by fluoroscopy</label>
+                <select name="ca">
+                    <option value="-1">--Please choose an option--</option>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                </select>
+            </div>
+            <div class="item">
+                <label>Thallium stress result (Thalassemia)</label>
+                <select name="thal">
+                    <option value="-1">--Please choose an option--</option>
+                    <option value="1">Normal</option>
+                    <option value="2">Fixed defect</option>
+                    <option value="3">Reversible defect</option>
+                </select>
+            </div>
+            <div class="item">
+                <div class="button" >
+                    <input id="btn" type="submit" value="Predict">
+                </div>
+            </div>
+        </form>
+
+        <div class="result">
+            {% if result %}
+            {{result}}
+            {% endif %}
+        <form action="/reset" method="post" class="rst">
+                <input class="red" type="submit" value="Reset">
+        </form>
+
+
+    </div>
+    <p id="gid"></p>
+    <div id="guide" >
+        <div class="content">
+            <h1>Guide</h1>
+            <div class="grp">
+                <div class="CP block">
+                    <h2>Chest Pain Type</h2>
+                    <ul>
+                        <li>Typical angina - chest pain related to decreased blood supply to the heart.</li>
+                        <li>Atypical angina - chest pain not related to the heart.</li>
+                        <li>
+                            Non-anginal pain - typically esophageal spasms (non-heart related).
+                        </li>
+                        <li>
+                            Asymptomatic - chest pain not showing signs of disease.
+                        </li>
+                    </ul>
+                </div>
+                <div class="rbp block">
+                    <h2>Resting Blood Pressure</h2>
+                    <ul>
+                        <li>Normal: Systolic blood pressure less than 120 mmHg and diastolic blood pressure less than 80 mmHg.
+                        </li>
+                        <li>Prehypertension: Systolic blood pressure 120-139 mmHg or diastolic blood pressure 80-89 mmHg.</li>
+                        <li>
+                            Stage 1 hypertension: Systolic blood pressure 140-159 mmHg or diastolic blood pressure 90-99 mmHg.
+                        </li>
+                        <li>
+                            Stage 2 hypertension: Systolic blood pressure 160 mmHg or higher or diastolic blood pressure 100
+                            mmHg or higher.
+                        </li>
+                    </ul>
+                </div>
+                <div class="Chol block"">
+                    <h2>Serum Cholestoral in mg/dl :</h2>
+                    <ul>
+                        <li>Less than 200mg/dL Desirable </li>
+                        <li>200-239 mg/dL Borderline high</li>
+                        <li>240mg/dL and above High</li>
+                        <li>Serum = LDL + HDL + 0.2 * triglycerides.
+                            </li>
+                            <li>
+                                Values above 200 mg/dl are cause for concern.
+                            </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="grp">
+                <div class=" Fbs block"">
+                    <h2>Fasting Blood Sugar</h2>
+                    <ul>
+                        <li>fasting blood sugar > 120 mg/dl : Considered prediabetes</li>
+                        <li>Values above 126 mg/dl may indicate diabetes.</li>
+                    </ul>
+                </div>
+                <div class="rer block">
+                    <h2>Resting Electrocardiographic Results</h2>
+                    <ul>
+                        <li>
+                            <p>a test that records the electrical activity of your heart while you are at rest. It can be used
+                                to detect heart problems, such as arrhythmias (irregular heartbeats), heart muscle damage, and
+                                heart attack.</p>
+                        </li>
+
+                        <li>having ST-T wave abnormality (T wave inversions and/or ST elevation or depression of > 0.05 mV)</li>
+                        <li>showing probable or definite left ventricular hypertrophy by Estes' criteria</li>
+                    </ul>
+                </div>
+                <div class="oldp block">
+                    <h2>Oldpeak</h2>
+                    <ul>
+                        <li>
+                            <p>ST depression induced by exercise is a common electrocardiographic (ECG) finding that can be seen
+                                in people with coronary artery disease (CAD). It occurs when the heart muscle does not receive
+                                enough oxygen during exercise. This can be caused by a narrowing of the coronary arteries, which
+                                reduces blood flow to the heart.</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="grp">
+                <div class="Slope block">
+                    <h2>Slope</h2>
+                    <ul>
+                        <li>Upsloping - better heart rate with exercise (uncommon)</li>
+
+                        <li>Flatsloping - minimal change (typical healthy heart).</li>
+                        <li>Downsloping - signs of an unhealthy heart.</li>
+                    </ul>
+                </div>
+                <div class="Ca block">
+                    <h2>Number of major vessels (0-3) colored by fluoroscopy</h2>
+                    <ul>
+                        <li>A colored vessel means the doctor can see the blood passing through.</li>
+
+                        <li>The more blood movement, the better (no clots).</li>
+                    </ul>
+                </div>
+                <div class="both block">
+                    <h2>Thallium Stress Result</h2>
+                    <ul>
+                        <li>Fixed defect - used to be a defect but now OK.</li>
+
+                        <li>Reversible defect - no proper blood movement when exercising.</li>
+                    </ul>
+                    <br>
+                    <h2>exercise induced angina :</h2>
+                    <ul>
+                        <li>Exercise-induced angina is chest pain or discomfort that occurs when you exercise or do other
+                            activities that increase your heart rate.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <footer>
+            <div class="foot"><p>&copy;2023 bharatsirvi855</p></div>
+        </footer>
+    </div>
+
+</body>
+
+</html>
